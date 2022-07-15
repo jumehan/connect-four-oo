@@ -11,31 +11,16 @@
 
 //let currPlayer = 1; // active player: 1 or 2
 //let board = []; // array of rows, each row is array of cells  (board[y][x])
-const START = document.getElementById("start")
-
-START.addEventListener("click", function() {
-  new Game(6, 7);
-  //START.innerHTML = ""
-
-  START.addEventListener("click", function() {
-    location.reload();
-    new Game(6, 7)
-  })
-})
-
-class Player {
-  constructor() {
-    this.p1 = ;
-    this.p2 = ;
-  }
-}
+const START = document.getElementById("start");
+const PLAYER_ONE = document.getElementById("p1");
+const PLAYER_TWO = document.getElementById("p2");
 
 class Game {
-  constructor(height, width) {
+  constructor(p1, p2, height, width) {
+    this.players = [p1, p2];
     this.height = height;
     this.width = width;
-    this.board = [];
-    this.currPlayer = 1;
+    this.currPlayer = p1;
     this.makeBoard();
     this.handleClick = this.handleClick.bind(this);
     this.makeHtmlBoard();
@@ -43,12 +28,14 @@ class Game {
   }
 
   makeBoard() {
+    this.board = [];
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
     }
   }
   makeHtmlBoard() {
     const boardGrid = document.getElementById('board');
+    boardGrid.innerHTML = "";
 
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
@@ -87,7 +74,7 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`${y}-${x}`);
@@ -130,7 +117,8 @@ class Game {
     }
 
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer =
+      this.currPlayer === this.players[0] ? this.players[1] : this.players[0];
   }
 
   checkForWin() {
@@ -164,6 +152,15 @@ class Game {
       }
     }
   }
-
+}
+class Player {
+  constructor(color) {
+    this.color = color;
+  }
 }
 
+START.addEventListener("click", () => {
+  const p1 = new Player(PLAYER_ONE.value);
+  const p2 = new Player(PLAYER_TWO.value);
+  new Game(p1, p2, 6, 7);
+})
