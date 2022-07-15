@@ -23,6 +23,13 @@ START.addEventListener("click", function() {
   })
 })
 
+class Player {
+  constructor() {
+    this.p1 = ;
+    this.p2 = ;
+  }
+}
+
 class Game {
   constructor(height, width) {
     this.height = height;
